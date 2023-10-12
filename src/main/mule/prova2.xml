@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="98964e69-3cf8-423d-9aeb-10645503849e" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="prova-munitFlow" doc:id="bc134573-295a-47c8-b759-eb3f8ab95491" >
+		<http:listener doc:name="Listener" doc:id="ac62c4a8-7b75-46ff-b422-8c0004c9e924" config-ref="HTTP_Listener_config" path="/Munit"/>
+		<validation:is-not-null doc:name="Is not null" doc:id="58575eef-c503-44f2-bfe8-a930066c6fd7" value="#[payload]"/>
+		<choice doc:name="Choice" doc:id="f8272861-9314-40ab-b41d-c89c698d4372" >
+			<when expression='#[payload == "ciao"]'>
+				<flow-ref doc:name="Flow Reference" doc:id="4b9927ba-3f3b-457a-a447-9cab8b867ff8" name="prova-munitFlow1" />
+			</when>
+			<otherwise >
+				<flow-ref doc:name="Flow Reference" doc:id="3d446fd6-a046-4ec6-8d66-c7d050b98733" name="prova-munitFlow2"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="prova-munitFlow1" doc:id="de41ce13-f0e1-46e6-bb89-e759d99550d4" >
+		<ee:transform doc:name="Transform Message" doc:id="4f68e734-42d3-4eba-95aa-a9e0be17f56c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="3d693dbf-28ea-41a4-8ea1-38734cda5588" message="completato"/>
+	</flow>
+	<flow name="prova-munitFlow2" doc:id="dc5fa6fc-8456-4804-85ef-547668149a1d" >
+		<ee:transform doc:name="Transform Message" doc:id="aabe2b74-6453-46ea-83ef-078d38d9b678" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="8f92bb26-569f-4f40-8290-f9dbe6d1c384" message="completo 1"/>
+	</flow>
+</mule>

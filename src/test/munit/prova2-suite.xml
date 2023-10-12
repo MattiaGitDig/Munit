@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="prova2-suite.xml" />
+	<munit:test name="prova-munitFlow-test" doc:id="fd460e8b-4cf4-498b-bdda-73f3467311f2" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="28d53e6b-d882-46a8-9ffc-ff432716ba47" >
+				<munit:payload value="#[output text/plain  --- readUrl('classpath://provamunitFlowtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="text/plain " />
+				<munit:attributes value="#[readUrl('classpath://provamunitFlowtest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to prova-munitFlow" doc:id="0d3d0c13-5d2f-4e13-a2b9-bbbdaa28e252" name="prova-munitFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="70117b9c-ac84-4bba-a0af-7157636ca0ac" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import provamunitFlowtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="prova-munitFlow-test1" doc:id="defc895d-0667-4477-a725-5064020f1d3f" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="aca5346b-1ddc-4ee1-a974-75b5b3c9b89c" >
+				<munit:payload value="#[readUrl('classpath://provamunitFlowtest1\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://provamunitFlowtest1\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to prova-munitFlow" doc:id="96666c33-984e-431b-b0b9-25c84e612d9f" name="prova-munitFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="6adf6243-ead8-4f0c-bcb2-26e3de0bcc4a" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import provamunitFlowtest1::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
